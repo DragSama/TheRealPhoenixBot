@@ -63,10 +63,11 @@ def reply_afk(bot: Bot, update: Update):
 
             elif ent.type == MessageEntity.MENTION:
                 user_id = get_user_id(
-                    message.text[ent.offset : ent.offset + ent.length]
+                    message.text[ent.offset: ent.offset + ent.length]
                 )
                 if not user_id:
-                    # Should never happen, since for a user to become AFK they must have spoken. Maybe changed username?
+                    # Should never happen, since for a user to become AFK they
+                    # must have spoken. Maybe changed username?
                     return
                 chat = bot.get_chat(user_id)
                 fst_name = chat.first_name
@@ -101,9 +102,9 @@ AFK_HANDLER = DisableAbleCommandHandler("afk", afk)
 AFK_REGEX_HANDLER = DisableAbleRegexHandler("(?i)brb", afk, friendly="afk")
 NO_AFK_HANDLER = MessageHandler(Filters.all & Filters.group, no_longer_afk)
 AFK_REPLY_HANDLER = MessageHandler(
-    Filters.entity(MessageEntity.MENTION) | Filters.entity(MessageEntity.TEXT_MENTION),
-    reply_afk,
-)
+    Filters.entity(
+        MessageEntity.MENTION) | Filters.entity(
+            MessageEntity.TEXT_MENTION), reply_afk, )
 
 dispatcher.add_handler(AFK_HANDLER, AFK_GROUP)
 dispatcher.add_handler(AFK_REGEX_HANDLER, AFK_GROUP)

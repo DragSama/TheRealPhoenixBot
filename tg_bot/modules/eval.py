@@ -64,9 +64,8 @@ def namespace_of(chat, update, bot):
 def log_input(update):
     user = update.effective_user.id
     chat = update.effective_chat.id
-    LOGGER.info(
-        "IN: {} (user={}, chat={})".format(update.effective_message.text, user, chat)
-    )
+    LOGGER.info("IN: {} (user={}, chat={})".format(
+        update.effective_message.text, user, chat))
 
 
 def send(msg, bot, update):
@@ -143,7 +142,7 @@ def do(func, bot, update):
             else:
                 try:
                     result = "{}".format(repr(eval(body, env)))
-                except:
+                except BaseException:
                     pass
         else:
             result = "{}{}".format(value, func_return)
@@ -166,7 +165,7 @@ def error_callback(bot, update, error):
         raise error
     except (TimedOut, NetworkError):
         log.debug(error, exc_info=True)
-    except:
+    except BaseException:
         log.info(error, exc_info=True)
 
 

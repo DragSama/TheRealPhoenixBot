@@ -27,7 +27,8 @@ def stickerid(bot: Bot, update: Update):
             parse_mode=ParseMode.MARKDOWN,
         )
     else:
-        update.effective_message.reply_text("Please reply to a sticker to get its ID.")
+        update.effective_message.reply_text(
+            "Please reply to a sticker to get its ID.")
 
 
 @run_async
@@ -59,9 +60,8 @@ def steal(bot: Bot, update: Update, args: List[str]):
             stickerset = bot.get_sticker_set(packname)
             if len(stickerset.stickers) >= max_stickers:
                 packnum += 1
-                packname = (
-                    "a" + str(packnum) + "_" + str(user.id) + "_by_" + bot.username
-                )
+                packname = ("a" + str(packnum) + "_" +
+                            str(user.id) + "_by_" + bot.username)
             else:
                 packname_found = 1
         except TelegramError as e:
@@ -114,8 +114,8 @@ def steal(bot: Bot, update: Update, args: List[str]):
                 emojis=sticker_emoji,
             )
             msg.reply_text(
-                f"Sticker successfully added to [pack](t.me/addstickers/{packname})"
-                + f"\nEmoji is: {sticker_emoji}",
+                f"Sticker successfully added to [pack](t.me/addstickers/{packname})" +
+                f"\nEmoji is: {sticker_emoji}",
                 parse_mode=ParseMode.MARKDOWN,
             )
         except OSError as e:
@@ -142,8 +142,8 @@ def steal(bot: Bot, update: Update, args: List[str]):
                     emojis=sticker_emoji,
                 )
                 msg.reply_text(
-                    f"Sticker successfully added to [pack](t.me/addstickers/{packname})"
-                    + f"\nEmoji is: {sticker_emoji}",
+                    f"Sticker successfully added to [pack](t.me/addstickers/{packname})" +
+                    f"\nEmoji is: {sticker_emoji}",
                     parse_mode=ParseMode.MARKDOWN,
                 )
             elif e.message == "Invalid sticker emojis":
@@ -196,8 +196,8 @@ def steal(bot: Bot, update: Update, args: List[str]):
                 emojis=sticker_emoji,
             )
             msg.reply_text(
-                f"Sticker successfully added to [pack](t.me/addstickers/{packname})"
-                + f"\nEmoji is: {sticker_emoji}",
+                f"Sticker successfully added to [pack](t.me/addstickers/{packname})" +
+                f"\nEmoji is: {sticker_emoji}",
                 parse_mode=ParseMode.MARKDOWN,
             )
         except OSError as e:
@@ -279,9 +279,8 @@ def makepack_internal(msg, user, png_sticker, emoji, bot, packname, packnum):
         print(e)
         if e.message == "Sticker set name is already occupied":
             msg.reply_text(
-                "Your pack can be found [here](t.me/addstickers/%s)" % packname,
-                parse_mode=ParseMode.MARKDOWN,
-            )
+                "Your pack can be found [here](t.me/addstickers/%s)" %
+                packname, parse_mode=ParseMode.MARKDOWN, )
         elif e.message == "Peer_id_invalid":
             msg.reply_text(
                 "Contact me in PM first.",
@@ -291,18 +290,14 @@ def makepack_internal(msg, user, png_sticker, emoji, bot, packname, packnum):
             )
         elif e.message == "Internal Server Error: created sticker set not found (500)":
             msg.reply_text(
-                "Sticker pack successfully created! Get it [here](t.me/addstickers/%s)"
-                % packname,
-                parse_mode=ParseMode.MARKDOWN,
-            )
+                "Sticker pack successfully created! Get it [here](t.me/addstickers/%s)" %
+                packname, parse_mode=ParseMode.MARKDOWN, )
         return
 
     if success:
         msg.reply_text(
-            "Sticker pack successfully created! Get it [here](t.me/addstickers/%s)"
-            % packname,
-            parse_mode=ParseMode.MARKDOWN,
-        )
+            "Sticker pack successfully created! Get it [here](t.me/addstickers/%s)" %
+            packname, parse_mode=ParseMode.MARKDOWN, )
     else:
         msg.reply_text("Failed to create sticker pack.")
 

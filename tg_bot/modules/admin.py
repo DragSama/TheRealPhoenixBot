@@ -37,7 +37,7 @@ def promote(bot: Bot, update: Update, args: List[str]) -> str:
 
     if (
         not (promoter.can_promote_members or promoter.status == "creator")
-        and not user.id in SUDO_USERS
+        and user.id not in SUDO_USERS
     ):
         message.reply_text("You don't have the necessary rights to do that!")
         return ""
@@ -49,11 +49,13 @@ def promote(bot: Bot, update: Update, args: List[str]) -> str:
 
     user_member = chat.get_member(user_id)
     if user_member.status == "administrator" or user_member.status == "creator":
-        message.reply_text("How am I meant to promote someone that's already an admin?")
+        message.reply_text(
+            "How am I meant to promote someone that's already an admin?")
         return ""
 
     if user_id == bot.id:
-        message.reply_text("I can't promote myself! Get an admin to do it for me.")
+        message.reply_text(
+            "I can't promote myself! Get an admin to do it for me.")
         return ""
 
     # set same perms as bot - bot can't assign higher perms than itself!
@@ -97,7 +99,7 @@ def set_title(bot: Bot, update: Update, args):
     promoter = chat.get_member(user.id)
     if (
         not (promoter.can_promote_members or promoter.status == "creator")
-        and not user.id in SUDO_USERS
+        and user.id not in SUDO_USERS
     ):
         message.reply_text("You don't have the necessary rights to do that!")
         return
@@ -142,7 +144,8 @@ def demote(bot: Bot, update: Update, args: List[str]) -> str:
 
     user_member = chat.get_member(user_id)
     if user_member.status == "creator":
-        message.reply_text("This person CREATED the chat, how would I demote them?")
+        message.reply_text(
+            "This person CREATED the chat, how would I demote them?")
         return ""
 
     if not user_member.status == "administrator":
@@ -150,7 +153,8 @@ def demote(bot: Bot, update: Update, args: List[str]) -> str:
         return ""
 
     if user_id == bot.id:
-        message.reply_text("I can't demote myself! Get an admin to do it for me.")
+        message.reply_text(
+            "I can't demote myself! Get an admin to do it for me.")
         return ""
 
     try:
@@ -181,8 +185,7 @@ def demote(bot: Bot, update: Update, args: List[str]) -> str:
     except BadRequest:
         message.reply_text(
             "Could not demote. I might not be admin, or the admin status was appointed by another "
-            "user, so I can't act upon them!"
-        )
+            "user, so I can't act upon them!")
         return ""
 
 
@@ -210,8 +213,9 @@ def pin(bot: Bot, update: Update, args: List[str]) -> str:
     if prev_message and is_group:
         try:
             bot.pinChatMessage(
-                chat.id, prev_message.message_id, disable_notification=is_silent
-            )
+                chat.id,
+                prev_message.message_id,
+                disable_notification=is_silent)
         except BadRequest as excp:
             if excp.message == "Chat_not_modified":
                 pass
@@ -281,7 +285,8 @@ def invite(bot: Bot, update: Update):
 @run_async
 def adminlist(bot: Bot, update: Update):
     administrators = update.effective_chat.get_administrators()
-    text = "Admins in <b>{}</b>:".format(update.effective_chat.title or "this chat")
+    text = "Admins in <b>{}</b>:".format(
+        update.effective_chat.title or "this chat")
     for admin in administrators:
         user = admin.user
         name = """<a href="tg://user?id={}">{}</a>""".format(
@@ -325,7 +330,11 @@ PROMOTE_HANDLER = CommandHandler(
 SET_TITLE_HANDLER = CommandHandler(
     "settitle", set_title, pass_args=True, filters=Filters.group
 )
-DEMOTE_HANDLER = CommandHandler("demote", demote, pass_args=True, filters=Filters.group)
+DEMOTE_HANDLER = CommandHandler(
+    "demote",
+    demote,
+    pass_args=True,
+    filters=Filters.group)
 
 ADMINLIST_HANDLER = DisableAbleCommandHandler(
     "adminlist", adminlist, filters=Filters.group

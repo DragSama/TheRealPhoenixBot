@@ -15,13 +15,14 @@ def ud(bot: Bot, update: Update):
         else update.effective_message
     )
     if msg == update.effective_message:
-        text = msg.text[len("/ud ") :]
-    # Args should take more precedence. Hence even if it's a reply, it'll query what you typed
+        text = msg.text[len("/ud "):]
+    # Args should take more precedence. Hence even if it's a reply, it'll
+    # query what you typed
     elif (
         msg == update.effective_message.reply_to_message
         and len(update.effective_message.text) > 3
     ):
-        text = update.effective_message.text[len("/ud ") :]
+        text = update.effective_message.text[len("/ud "):]
     else:
         text = msg.text
     if text == "":
@@ -29,7 +30,8 @@ def ud(bot: Bot, update: Update):
             "Please enter a query to look up on Urban Dictionary!"
         )
     else:
-        results = get(f"http://api.urbandictionary.com/v0/define?term={text}").json()
+        results = get(
+            f"http://api.urbandictionary.com/v0/define?term={text}").json()
     try:
         reply_text = f'*{text}*\n\n{results["list"][0]["definition"]}\n\n_{results["list"][0]["example"]}_'
     except IndexError:

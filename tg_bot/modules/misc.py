@@ -159,8 +159,7 @@ def slap(bot: Bot, update: Update, args: List[str]):
 
     # reply to correct message
     reply_text = (
-        msg.reply_to_message.reply_text if msg.reply_to_message else msg.reply_text
-    )
+        msg.reply_to_message.reply_text if msg.reply_to_message else msg.reply_text)
 
     # get user who sent message
     if msg.from_user.username:
@@ -185,7 +184,8 @@ def slap(bot: Bot, update: Update, args: List[str]):
 
     # if no target found, bot targets the sender
     else:
-        user1 = """<a href="tg://user?id={}">{}</a>""".format(bot.id, bot.first_name)
+        user1 = """<a href="tg://user?id={}">{}</a>""".format(
+            bot.id, bot.first_name)
         user2 = curr_user
 
     temp = random.choice(SLAP_TEMPLATES)
@@ -193,7 +193,12 @@ def slap(bot: Bot, update: Update, args: List[str]):
     hit = random.choice(HIT)
     throw = random.choice(THROW)
 
-    repl = temp.format(user1=user1, user2=user2, item=item, hits=hit, throws=throw)
+    repl = temp.format(
+        user1=user1,
+        user2=user2,
+        item=item,
+        hits=hit,
+        throws=throw)
 
     reply_text(repl, parse_mode=ParseMode.HTML)
 
@@ -219,25 +224,24 @@ def get_id(bot: Bot, update: Update, args: List[str]):
             user2 = update.effective_message.reply_to_message.forward_from
             update.effective_message.reply_text(
                 "The original sender, {}, has an ID of `{}`.\nThe forwarder, {}, has an ID of `{}`.".format(
-                    escape_markdown(user2.first_name),
-                    user2.id,
-                    escape_markdown(user1.first_name),
-                    user1.id,
-                ),
-                parse_mode=ParseMode.MARKDOWN,
-            )
+                    escape_markdown(
+                        user2.first_name), user2.id, escape_markdown(
+                        user1.first_name), user1.id, ), parse_mode=ParseMode.MARKDOWN, )
         else:
             user = bot.get_chat(user_id)
             update.effective_message.reply_text(
-                "{}'s id is `{}`.".format(escape_markdown(user.first_name), user.id),
+                "{}'s id is `{}`.".format(
+                    escape_markdown(
+                        user.first_name),
+                    user.id),
                 parse_mode=ParseMode.MARKDOWN,
             )
     else:
         chat = update.effective_chat  # type: Optional[Chat]
         if chat.type == "private":
             update.effective_message.reply_text(
-                "Your id is `{}`.".format(chat.id), parse_mode=ParseMode.MARKDOWN
-            )
+                "Your id is `{}`.".format(
+                    chat.id), parse_mode=ParseMode.MARKDOWN)
 
         else:
             update.effective_message.reply_text(
@@ -285,7 +289,8 @@ def info(bot: Bot, update: Update, args: List[str]):
     if user.username:
         text += "\nUsername: @{}".format(html.escape(user.username))
 
-    text += "\nPermanent user link: {}".format(mention_html(user.id, user.first_name))
+    text += "\nPermanent user link: {}".format(
+        mention_html(user.id, user.first_name))
 
     if user.id == OWNER_ID:
         text += "\n\nThis person is my owner."
@@ -321,7 +326,8 @@ def info(bot: Bot, update: Update, args: List[str]):
 def get_time(bot: Bot, update: Update, args: List[str]):
     location = " ".join(args)
     if location.lower() == bot.first_name.lower():
-        update.effective_message.reply_text("Its always banhammer time for me!")
+        update.effective_message.reply_text(
+            "Its always banhammer time for me!")
         bot.send_sticker(update.effective_chat.id, BAN_STICKER)
         return
 
@@ -352,16 +358,18 @@ def get_time(bot: Bot, update: Update, args: List[str]):
 
             timenow = int(datetime.utcnow().timestamp())
             res = requests.get(
-                GMAPS_TIME,
-                params=dict(location="{},{}".format(lat, long), timestamp=timenow),
-            )
+                GMAPS_TIME, params=dict(
+                    location="{},{}".format(
+                        lat, long), timestamp=timenow), )
             if res.status_code == 200:
                 offset = json.loads(res.text)["dstOffset"]
                 timestamp = json.loads(res.text)["rawOffset"]
                 time_there = datetime.fromtimestamp(
                     timenow + timestamp + offset
                 ).strftime("%H:%M:%S on %A %d %B")
-                update.message.reply_text("It's {} in {}".format(time_there, location))
+                update.message.reply_text(
+                    "It's {} in {}".format(
+                        time_there, location))
 
 
 @run_async
@@ -389,9 +397,7 @@ def gdpr(bot: Bot, update: Update):
         "[this](https://ico.org.uk/for-organisations/guide-to-the-general-data-protection-regulation-gdpr/individual-rights/right-to-erasure/), "
         "which clearly states that the right to erasure does not apply "
         '"for the performance of a task carried out in the public interest", as is '
-        "the case for the aforementioned pieces of data.",
-        parse_mode=ParseMode.MARKDOWN,
-    )
+        "the case for the aforementioned pieces of data.", parse_mode=ParseMode.MARKDOWN, )
 
 
 def shell(command):
@@ -451,7 +457,8 @@ Keep in mind that your message <b>MUST</b> contain some text other than just a b
 
 @run_async
 def markdown_help(bot: Bot, update: Update):
-    update.effective_message.reply_text(MARKDOWN_HELP, parse_mode=ParseMode.HTML)
+    update.effective_message.reply_text(
+        MARKDOWN_HELP, parse_mode=ParseMode.HTML)
     update.effective_message.reply_text(
         "Try forwarding the following message to me, and you'll see!"
     )
@@ -488,7 +495,8 @@ def sudo_list(bot: Bot, update: Update):
         user_id = int(sudo)  # Ensure int
         user = bot.get_chat(user_id)
         first_name = html.escape(user.first_name)
-        reply += """• <a href="tg://user?id={}">{}</a>\n""".format(user_id, first_name)
+        reply += """• <a href="tg://user?id={}">{}</a>\n""".format(
+            user_id, first_name)
     update.effective_message.reply_text(reply, parse_mode=ParseMode.HTML)
 
 
@@ -499,7 +507,8 @@ def support_list(bot: Bot, update: Update):
         user_id = int(support)  # Ensure int
         user = bot.get_chat(user_id)
         first_name = html.escape(user.first_name)
-        reply += """• <a href="tg://user?id={}">{}</a>\n""".format(user_id, first_name)
+        reply += """• <a href="tg://user?id={}">{}</a>\n""".format(
+            user_id, first_name)
     update.effective_message.reply_text(reply, parse_mode=ParseMode.HTML)
 
 
@@ -553,8 +562,8 @@ def leave_chat(bot: Bot, update: Update, args):
     if reason:
         try:
             chat.send_message(
-                f"I'm outta here!\nReason: <code>{reason}</code>", parse_mode="HTML"
-            )
+                f"I'm outta here!\nReason: <code>{reason}</code>",
+                parse_mode="HTML")
         except BadRequest:
             pass
         except Unauthorized:
@@ -590,9 +599,13 @@ INFO_HANDLER = DisableAbleCommandHandler("info", info, pass_args=True)
 
 ECHO_HANDLER = DisableAbleCommandHandler("echo", echo, filters=Filters.group)
 RAM_HANDLER = CommandHandler("ram", ram, filters=CustomFilters.sudo_filter)
-MD_HELP_HANDLER = CommandHandler("markdownhelp", markdown_help, filters=Filters.private)
+MD_HELP_HANDLER = CommandHandler(
+    "markdownhelp",
+    markdown_help,
+    filters=Filters.private)
 
-STATS_HANDLER = CommandHandler("stats", stats, filters=CustomFilters.sudo_filter)
+STATS_HANDLER = CommandHandler(
+    "stats", stats, filters=CustomFilters.sudo_filter)
 GDPR_HANDLER = CommandHandler("gdpr", gdpr, filters=Filters.private)
 PING_HANDLER = DisableAbleCommandHandler("ping", ping)
 SUDO_LIST_HANDLER = CommandHandler(

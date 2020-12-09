@@ -85,7 +85,8 @@ def chatbot(bot: Bot, update: Update):
             sleep(0.3)
             msg.reply_text(rep, timeout=60)
         except CFError as e:
-            bot.send_message(OWNER_ID, f"Chatbot error: {e} occurred in {chat_id}!")
+            bot.send_message(
+                OWNER_ID, f"Chatbot error: {e} occurred in {chat_id}!")
 
 
 @run_async
@@ -106,15 +107,13 @@ def list_chatbot_chats(bot: Bot, update: Update):
     update.effective_message.reply_text(text, parse_mode="HTML")
 
 
-ADD_CHAT_HANDLER = CommandHandler("addchat", add_chat, filters=CustomFilters.dev_filter)
+ADD_CHAT_HANDLER = CommandHandler(
+    "addchat", add_chat, filters=CustomFilters.dev_filter)
 REMOVE_CHAT_HANDLER = CommandHandler(
     "rmchat", remove_chat, filters=CustomFilters.dev_filter
 )
-CHATBOT_HANDLER = MessageHandler(
-    Filters.text
-    & (~Filters.regex(r"^#[^\s]+") & ~Filters.regex(r"^!") & ~Filters.regex(r"^s\/")),
-    chatbot,
-)
+CHATBOT_HANDLER = MessageHandler(Filters.text & (~Filters.regex(
+    r"^#[^\s]+") & ~Filters.regex(r"^!") & ~Filters.regex(r"^s\/")), chatbot, )
 LIST_CB_CHATS_HANDLER = CommandHandler(
     "listaichats", list_chatbot_chats, filters=CustomFilters.dev_filter
 )

@@ -23,12 +23,9 @@ if is_module_loaded(FILENAME):
             message = update.effective_message  # type: Optional[Message]
             if result:
                 if chat.type == chat.SUPERGROUP and chat.username:
-                    result += (
-                        "\n<b>Link:</b> "
-                        '<a href="http://telegram.me/{}/{}">click here</a>'.format(
-                            chat.username, message.message_id
-                        )
-                    )
+                    result += ("\n<b>Link:</b> "
+                               '<a href="http://telegram.me/{}/{}">click here</a>'.format(chat.username,
+                                                                                          message.message_id))
                 log_chat = sql.get_chat_log_channel(chat.id)
                 if log_chat:
                     send_log(bot, log_chat, chat.id, result)
@@ -36,8 +33,7 @@ if is_module_loaded(FILENAME):
                 pass
             else:
                 LOGGER.warning(
-                    "%s was set as loggable, but had no return statement.", func
-                )
+                    "%s was set as loggable, but had no return statement.", func)
 
             return result
 
@@ -49,8 +45,8 @@ if is_module_loaded(FILENAME):
         except BadRequest as excp:
             if excp.message == "Chat not found":
                 bot.send_message(
-                    orig_chat_id, "This log channel has been deleted - unsetting."
-                )
+                    orig_chat_id,
+                    "This log channel has been deleted - unsetting.")
                 sql.stop_chat_logging(orig_chat_id)
             else:
                 LOGGER.warning(excp.message)
@@ -59,8 +55,8 @@ if is_module_loaded(FILENAME):
 
                 bot.send_message(
                     log_chat_id,
-                    result
-                    + "\n\nFormatting has been disabled due to an unexpected error.",
+                    result +
+                    "\n\nFormatting has been disabled due to an unexpected error.",
                 )
 
     @run_async
@@ -108,8 +104,7 @@ if is_module_loaded(FILENAME):
                 bot.send_message(
                     message.forward_from_chat.id,
                     "This channel has been set as the log channel for {}.".format(
-                        chat.title or chat.first_name
-                    ),
+                        chat.title or chat.first_name),
                 )
             except Unauthorized as excp:
                 if excp.message == "Forbidden: bot is not a member of the channel chat":
@@ -136,8 +131,9 @@ if is_module_loaded(FILENAME):
         log_channel = sql.stop_chat_logging(chat.id)
         if log_channel:
             bot.send_message(
-                log_channel, "Channel has been unlinked from {}".format(chat.title)
-            )
+                log_channel,
+                "Channel has been unlinked from {}".format(
+                    chat.title))
             message.reply_text("Log channel has been un-set.")
 
         else:

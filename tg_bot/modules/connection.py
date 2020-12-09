@@ -61,9 +61,8 @@ def allow_connections(bot: Bot, update: Update, args: List[str]):
                     parse_mode=ParseMode.MARKDOWN,
                 )
     else:
-        send_message(
-            update.effective_message, "This command is for group only. Not in PM!"
-        )
+        send_message(update.effective_message,
+                     "This command is for group only. Not in PM!")
 
 
 @run_async
@@ -98,13 +97,15 @@ def connect_chat(bot: Bot, update: Update, args: List[str]):
         if len(args) >= 1:
             try:
                 connect_chat = int(args[0])
-                getstatusadmin = bot.get_chat_member(connect_chat, msg.from_user.id)
+                getstatusadmin = bot.get_chat_member(
+                    connect_chat, msg.from_user.id)
             except ValueError:
                 try:
                     connect_chat = str(args[0])
                     get_chat = bot.getChat(connect_chat)
                     connect_chat = get_chat.id
-                    getstatusadmin = bot.get_chat_member(connect_chat, msg.from_user.id)
+                    getstatusadmin = bot.get_chat_member(
+                        connect_chat, msg.from_user.id)
                 except BadRequest:
                     send_message(msg, "Invalid Chat ID!")
                     return
@@ -174,8 +175,7 @@ def connect_chat(bot: Bot, update: Update, args: List[str]):
                 for x in sorted(gethistory.keys(), reverse=True):
                     htime = time.strftime("%d/%m/%Y", time.localtime(x))
                     text += "╞═「 *{}* 」\n│   `{}`\n│   `{}`\n".format(
-                        gethistory[x]["chat_name"], gethistory[x]["chat_id"], htime
-                    )
+                        gethistory[x]["chat_name"], gethistory[x]["chat_id"], htime)
                     text += "│\n"
                     buttons.append(
                         [
@@ -197,7 +197,11 @@ def connect_chat(bot: Bot, update: Update, args: List[str]):
                 conn_hist = InlineKeyboardMarkup([buttons])
             else:
                 conn_hist = None
-            send_message(msg, text, parse_mode="markdown", reply_markup=conn_hist)
+            send_message(
+                msg,
+                text,
+                parse_mode="markdown",
+                reply_markup=conn_hist)
 
     else:
         getstatusadmin = bot.get_chat_member(chat.id, msg.from_user.id)
@@ -243,7 +247,8 @@ def disconnect_chat(bot: Bot, update: Update):
     if chat.type == "private":
         disconnection_status = sql.disconnect(msg.from_user.id)
         if disconnection_status:
-            sql.disconnected_chat = send_message(msg, "Disconnected from chat!")
+            sql.disconnected_chat = send_message(
+                msg, "Disconnected from chat!")
         else:
             send_message(msg, "You're not connected!")
     else:
@@ -276,16 +281,15 @@ def connected(bot: Bot, update: Update, chat, user_id, need_admin=True):
                 ):
                     return conn_id
                 else:
-                    send_message(msg, "You must be an admin in the connected group!")
+                    send_message(
+                        msg, "You must be an admin in the connected group!")
                     raise Exception("Not admin!")
             else:
                 return conn_id
         else:
             send_message(
-                msg,
-                "The group changed the connection rights or you are no longer an admin.\n"
-                "I've disconnected you.",
-            )
+                msg, "The group changed the connection rights or you are no longer an admin.\n"
+                "I've disconnected you.", )
             disconnect_chat(bot, update)
             raise Exception("Not admin!")
     else:
@@ -344,12 +348,14 @@ def connect_button(bot: Bot, update: Update):
                 query.message.edit_text("Connection failed!")
         else:
             bot.answer_callback_query(
-                query.id, "Connection to this chat is not allowed!", show_alert=True
-            )
+                query.id,
+                "Connection to this chat is not allowed!",
+                show_alert=True)
     elif disconnect_match:
         disconnection_status = sql.disconnect(query.from_user.id)
         if disconnection_status:
-            sql.disconnected_chat = query.message.edit_text("Disconnected from chat!")
+            sql.disconnected_chat = query.message.edit_text(
+                "Disconnected from chat!")
         else:
             bot.answer_callback_query(
                 query.id, "You're not connected!", show_alert=True

@@ -67,8 +67,7 @@ def broadcast(bot: Bot, update: Update):
 
         update.effective_message.reply_text(
             "Broadcast complete. {} groups failed to receive the message, probably "
-            "due to being kicked.".format(failed)
-        )
+            "due to being kicked.".format(failed))
 
 
 @run_async
@@ -76,7 +75,11 @@ def log_user(bot: Bot, update: Update):
     chat = update.effective_chat  # type: Optional[Chat]
     msg = update.effective_message  # type: Optional[Message]
 
-    sql.update_user(msg.from_user.id, msg.from_user.username, chat.id, chat.title)
+    sql.update_user(
+        msg.from_user.id,
+        msg.from_user.username,
+        chat.id,
+        chat.title)
 
     if msg.reply_to_message:
         sql.update_user(
@@ -123,8 +126,7 @@ def rem_chat(bot: Bot, update: Update):
             sleep(e.retry_after)
     if kicked_chats >= 1:
         msg.reply_text(
-            "Done! {} chats were removed from the database!".format(kicked_chats)
-        )
+            "Done! {} chats were removed from the database!".format(kicked_chats))
     else:
         msg.reply_text("No chats had to be removed from the database!")
 
@@ -133,7 +135,8 @@ def __user_info__(user_id):
     if user_id == dispatcher.bot.id:
         return """I've seen them in... Wow. Are they stalking me? They're in all the same places I am... oh. It's me."""
     num_chats = sql.get_user_num_chats(user_id)
-    return """I've seen them in <code>{}</code> chats in total.""".format(num_chats)
+    return """I've seen them in <code>{}</code> chats in total.""".format(
+        num_chats)
 
 
 def __stats__():
@@ -156,7 +159,8 @@ BROADCAST_HANDLER = CommandHandler(
     "broadcast", broadcast, filters=Filters.user(OWNER_ID)
 )
 USER_HANDLER = MessageHandler(Filters.all & Filters.group, log_user)
-CHATLIST_HANDLER = CommandHandler("chatlist", chats, filters=CustomFilters.sudo_filter)
+CHATLIST_HANDLER = CommandHandler(
+    "chatlist", chats, filters=CustomFilters.sudo_filter)
 DELETE_CHATS_HANDLER = CommandHandler(
     "cleanchats", rem_chat, filters=Filters.user(OWNER_ID)
 )

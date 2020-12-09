@@ -37,10 +37,8 @@ def purge(bot: Bot, update: Update, args: List[str]) -> str:
                 except BadRequest as err:
                     if err.message == "Message can't be deleted":
                         bot.send_message(
-                            chat.id,
-                            "Cannot delete all messages. The messages may be too old, I might "
-                            "not have delete rights, or this might not be a supergroup.",
-                        )
+                            chat.id, "Cannot delete all messages. The messages may be too old, I might "
+                            "not have delete rights, or this might not be a supergroup.", )
 
                     elif err.message != "Message to delete not found":
                         LOGGER.exception("Error while purging chat messages.")
@@ -50,10 +48,8 @@ def purge(bot: Bot, update: Update, args: List[str]) -> str:
             except BadRequest as err:
                 if err.message == "Message can't be deleted":
                     bot.send_message(
-                        chat.id,
-                        "Cannot delete all messages. The messages may be too old, I might "
-                        "not have delete rights, or this might not be a supergroup.",
-                    )
+                        chat.id, "Cannot delete all messages. The messages may be too old, I might "
+                        "not have delete rights, or this might not be a supergroup.", )
 
                 elif err.message != "Message to delete not found":
                     LOGGER.exception("Error while purging chat messages.")
@@ -71,7 +67,8 @@ def purge(bot: Bot, update: Update, args: List[str]) -> str:
             )
 
     else:
-        msg.reply_text("Reply to a message to select where to start purging from.")
+        msg.reply_text(
+            "Reply to a message to select where to start purging from.")
 
     return ""
 
@@ -91,9 +88,9 @@ def del_message(bot: Bot, update: Update) -> str:
                 "\n#DEL"
                 "\n<b>Admin:</b> {}"
                 "\nMessage deleted.".format(
-                    html.escape(chat.title), mention_html(user.id, user.first_name)
-                )
-            )
+                    html.escape(
+                        chat.title), mention_html(
+                        user.id, user.first_name)))
     else:
         update.effective_message.reply_text("Whadya want to delete?")
 
@@ -110,7 +107,11 @@ __help__ = """
 __mod_name__ = "Purges"
 
 DELETE_HANDLER = CommandHandler("del", del_message, filters=Filters.group)
-PURGE_HANDLER = CommandHandler("purge", purge, filters=Filters.group, pass_args=True)
+PURGE_HANDLER = CommandHandler(
+    "purge",
+    purge,
+    filters=Filters.group,
+    pass_args=True)
 
 dispatcher.add_handler(DELETE_HANDLER)
 dispatcher.add_handler(PURGE_HANDLER)

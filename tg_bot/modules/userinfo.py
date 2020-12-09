@@ -83,8 +83,7 @@ def about_bio(bot: Bot, update: Update, args: List[str]):
     elif message.reply_to_message:
         username = user.first_name
         update.effective_message.reply_text(
-            "{} hasn't had a message set about themselves yet!".format(username)
-        )
+            "{} hasn't had a message set about themselves yet!".format(username))
     else:
         update.effective_message.reply_text(
             "You haven't had a bio set about yourself yet!"
@@ -107,19 +106,19 @@ def set_about_bio(bot: Bot, update: Update):
             )
             return
         elif user_id == bot.id and sender.id not in SUDO_USERS:
-            message.reply_text("Erm... yeah, I only trust sudo users to set my bio.")
+            message.reply_text(
+                "Erm... yeah, I only trust sudo users to set my bio.")
             return
 
         text = message.text
-        bio = text.split(
-            None, 1
-        )  # use python's maxsplit to only remove the cmd, hence keeping newlines.
+        # use python's maxsplit to only remove the cmd, hence keeping newlines.
+        bio = text.split(None, 1)
         if len(bio) == 2:
             if len(bio[1]) < MAX_MESSAGE_LENGTH // 4:
                 sql.set_user_bio(user_id, bio[1])
                 message.reply_text(
-                    "Updated {}'s bio!".format(repl_message.from_user.first_name)
-                )
+                    "Updated {}'s bio!".format(
+                        repl_message.from_user.first_name))
             else:
                 message.reply_text(
                     "A bio needs to be under {} characters! You tried to set {}.".format(
@@ -135,8 +134,7 @@ def __user_info__(user_id):
     me = html.escape(sql.get_user_me_info(user_id) or "")
     if bio and me:
         return "<b>About user:</b>\n{me}\n<b>What others say:</b>\n{bio}".format(
-            me=me, bio=bio
-        )
+            me=me, bio=bio)
     elif bio:
         return "<b>What others say:</b>\n{bio}\n".format(me=me, bio=bio)
     elif me:

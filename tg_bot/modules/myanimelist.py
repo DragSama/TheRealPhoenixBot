@@ -21,14 +21,14 @@ client.init(access_token=MAL_ACCESS_TOKEN)
 def refresh_token(msg: Message, error: APIException) -> None:
     if str(error.response) == "<Response [401]>":
         client.refresh_bearer_token(
-            client_id=MAL_CLIENT_ID, refresh_token=MAL_REFRESH_TOKEN, client_secret=None
-        )
+            client_id=MAL_CLIENT_ID,
+            refresh_token=MAL_REFRESH_TOKEN,
+            client_secret=None)
         new_access_token = client.bearer_token
         new_refresh_token = client.refresh_token
         MSG_TEXT = (
             f"Your MAL access token has expired.\n*New Access Token*: `{new_access_token}`\n"
-            f"*New Refresh Token*: `{new_refresh_token}`"
-        )
+            f"*New Refresh Token*: `{new_refresh_token}`")
         bot.send_message(OWNER_ID, MSG_TEXT, parse_mode="MARKDOWN")
     else:
         msg.reply_text(f"An error occurred:\n`{error}`", parse_mode="MARKDOWN")
@@ -82,15 +82,13 @@ def search_anime(bot: Bot, update: Update, args: List[str]) -> None:
     text += f"<b>Premiered</b>: <code>{premiered}</code>\n\n"
     text += f"<a href='{image}'>\u200c</a>"
     text += res.synopsis
-    keyb = [
-        [
-            InlineKeyboardButton(
-                "More Information", url=f"https://myanimelist.net/anime/{anime_id}"
-            )
-        ]
-    ]
+    keyb = [[InlineKeyboardButton(
+        "More Information", url=f"https://myanimelist.net/anime/{anime_id}")]]
 
-    msg.reply_text(text, parse_mode="HTML", reply_markup=InlineKeyboardMarkup(keyb))
+    msg.reply_text(
+        text,
+        parse_mode="HTML",
+        reply_markup=InlineKeyboardMarkup(keyb))
 
 
 @run_async
@@ -127,15 +125,13 @@ def search_manga(bot: Bot, update: Update, args: List[str]) -> None:
         text += f"<b>Chapters</b>: <code>{res.num_chapters}</code>\n"
     text += f"<a href='{image}'>\u200c</a>"
     text += f"\n{res.synopsis}"
-    keyb = [
-        [
-            InlineKeyboardButton(
-                "More Information", url=f"https://myanimelist.net/manga/{manga_id}"
-            )
-        ]
-    ]
+    keyb = [[InlineKeyboardButton(
+        "More Information", url=f"https://myanimelist.net/manga/{manga_id}")]]
 
-    msg.reply_text(text, parse_mode="HTML", reply_markup=InlineKeyboardMarkup(keyb))
+    msg.reply_text(
+        text,
+        parse_mode="HTML",
+        reply_markup=InlineKeyboardMarkup(keyb))
 
 
 __help__ = """
@@ -149,8 +145,10 @@ Get information about anime and manga with the help of this module! All data is 
 __mod_name__ = "MyAnimeList"
 
 
-ANIME_HANDLER = DisableAbleCommandHandler("anime", search_anime, pass_args=True)
-MANGA_HANDLER = DisableAbleCommandHandler("manga", search_manga, pass_args=True)
+ANIME_HANDLER = DisableAbleCommandHandler(
+    "anime", search_anime, pass_args=True)
+MANGA_HANDLER = DisableAbleCommandHandler(
+    "manga", search_manga, pass_args=True)
 
 dispatcher.add_handler(ANIME_HANDLER)
 dispatcher.add_handler(MANGA_HANDLER)

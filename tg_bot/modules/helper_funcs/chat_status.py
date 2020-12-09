@@ -1,3 +1,4 @@
+from tg_bot.modules import connection
 from functools import wraps
 from typing import Optional
 
@@ -17,7 +18,10 @@ def can_delete(chat: Chat, bot_id: int) -> bool:
     return chat.get_member(bot_id).can_delete_messages
 
 
-def is_user_ban_protected(chat: Chat, user_id: int, member: ChatMember = None) -> bool:
+def is_user_ban_protected(
+        chat: Chat,
+        user_id: int,
+        member: ChatMember = None) -> bool:
     if (
         chat.type == "private"
         or user_id in SUDO_USERS
@@ -66,7 +70,10 @@ def dev_user(func):
     return is_admin
 
 
-def is_bot_admin(chat: Chat, bot_id: int, bot_member: ChatMember = None) -> bool:
+def is_bot_admin(
+        chat: Chat,
+        bot_id: int,
+        bot_member: ChatMember = None) -> bool:
     if chat.type == "private" or chat.all_members_are_administrators:
         return True
 
@@ -277,6 +284,5 @@ def connection_status(func):
 
 
 # Workaround for circular import with connection.py
-from tg_bot.modules import connection
 
 connected = connection.connected

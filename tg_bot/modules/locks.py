@@ -80,9 +80,11 @@ class CustomCommandHandler(tg.CommandHandler):
 
     def check_update(self, update):
         return super().check_update(update) and not (
-            sql.is_restr_locked(update.effective_chat.id, "messages")
-            and not is_user_admin(update.effective_chat, update.effective_user.id)
-        )
+            sql.is_restr_locked(
+                update.effective_chat.id,
+                "messages") and not is_user_admin(
+                update.effective_chat,
+                update.effective_user.id))
 
 
 tg.CommandHandler = CustomCommandHandler
@@ -90,8 +92,13 @@ tg.CommandHandler = CustomCommandHandler
 
 # NOT ASYNC
 def restr_members(
-    bot, chat_id, members, messages=False, media=False, other=False, previews=False
-):
+        bot,
+        chat_id,
+        members,
+        messages=False,
+        media=False,
+        other=False,
+        previews=False):
     for mem in members:
         if mem.user in SUDO_USERS:
             pass
@@ -164,10 +171,15 @@ def lock(bot: Bot, update: Update, args: List[str]) -> str:
                 if args[0] == "previews":
                     members = users_sql.get_chat_members(str(chat.id))
                     restr_members(
-                        bot, chat.id, members, messages=True, media=True, other=True
-                    )
+                        bot,
+                        chat.id,
+                        members,
+                        messages=True,
+                        media=True,
+                        other=True)
 
-                message.reply_text("Locked {} for all non-admins!".format(args[0]))
+                message.reply_text(
+                    "Locked {} for all non-admins!".format(args[0]))
                 return (
                     "<b>{}:</b>"
                     "\n#LOCK"
@@ -185,7 +197,8 @@ def lock(bot: Bot, update: Update, args: List[str]) -> str:
                 )
 
     else:
-        message.reply_text("I'm not an administrator, or haven't got delete rights.")
+        message.reply_text(
+            "I'm not an administrator, or haven't got delete rights.")
 
     return ""
 
@@ -274,8 +287,7 @@ def del_lockables(bot: Bot, update: Update):
                         if not is_bot_admin(chat, bot.id):
                             message.reply_text(
                                 "I see a bot, and I've been told to stop them joining... "
-                                "but I'm not admin!"
-                            )
+                                "but I'm not admin!")
                             return
 
                         chat.kick_member(new_mem.id)
@@ -355,19 +367,19 @@ def build_lock_message(chat_id):
                 )
             )
         if restr:
-            res += (
-                "\n - messages = `{}`"
-                "\n - media = `{}`"
-                "\n - other = `{}`"
-                "\n - previews = `{}`"
-                "\n - all = `{}`".format(
-                    restr.messages,
-                    restr.media,
-                    restr.other,
-                    restr.preview,
-                    all([restr.messages, restr.media, restr.other, restr.preview]),
-                )
-            )
+            res += ("\n - messages = `{}`"
+                    "\n - media = `{}`"
+                    "\n - other = `{}`"
+                    "\n - previews = `{}`"
+                    "\n - all = `{}`".format(restr.messages,
+                                             restr.media,
+                                             restr.other,
+                                             restr.preview,
+                                             all([restr.messages,
+                                                  restr.media,
+                                                  restr.other,
+                                                  restr.preview]),
+                                             ))
     return res
 
 
@@ -407,8 +419,16 @@ Locking bots will stop non-admins from adding bots to the chat.
 __mod_name__ = "Locks"
 
 LOCKTYPES_HANDLER = DisableAbleCommandHandler("locktypes", locktypes)
-LOCK_HANDLER = CommandHandler("lock", lock, pass_args=True, filters=Filters.group)
-UNLOCK_HANDLER = CommandHandler("unlock", unlock, pass_args=True, filters=Filters.group)
+LOCK_HANDLER = CommandHandler(
+    "lock",
+    lock,
+    pass_args=True,
+    filters=Filters.group)
+UNLOCK_HANDLER = CommandHandler(
+    "unlock",
+    unlock,
+    pass_args=True,
+    filters=Filters.group)
 LOCKED_HANDLER = CommandHandler("locks", list_locks, filters=Filters.group)
 
 dispatcher.add_handler(LOCK_HANDLER)

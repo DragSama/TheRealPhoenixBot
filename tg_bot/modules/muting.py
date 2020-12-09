@@ -87,7 +87,8 @@ def unmute(bot: Bot, update: Update, args: List[str]) -> str:
 
     if member:
         if is_user_admin(chat, user_id, member=member):
-            message.reply_text("This is an admin, what do you expect me to do?")
+            message.reply_text(
+                "This is an admin, what do you expect me to do?")
             return ""
 
         elif member.status != "kicked" and member.status != "left":
@@ -122,8 +123,7 @@ def unmute(bot: Bot, update: Update, args: List[str]) -> str:
     else:
         message.reply_text(
             "This user isn't even in the chat, unmuting them won't make them talk more than they "
-            "already do!"
-        )
+            "already do!")
 
     return ""
 
@@ -162,7 +162,8 @@ def temp_mute(bot: Bot, update: Update, args: List[str]) -> str:
         return ""
 
     if not reason:
-        message.reply_text("You haven't specified a time to mute this user for!")
+        message.reply_text(
+            "You haven't specified a time to mute this user for!")
         return ""
 
     split_reason = reason.split(None, 1)
@@ -234,7 +235,11 @@ __mod_name__ = "Muting"
 MUTE_HANDLER = CommandHandler(
     ["stfu", "mute"], mute, pass_args=True, filters=Filters.group
 )
-UNMUTE_HANDLER = CommandHandler("unmute", unmute, pass_args=True, filters=Filters.group)
+UNMUTE_HANDLER = CommandHandler(
+    "unmute",
+    unmute,
+    pass_args=True,
+    filters=Filters.group)
 TEMPMUTE_HANDLER = CommandHandler(
     ["tmute", "tempmute"], temp_mute, pass_args=True, filters=Filters.group
 )

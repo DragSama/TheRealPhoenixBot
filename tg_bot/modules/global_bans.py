@@ -178,10 +178,14 @@ def gban(bot: Bot, update: Update, args: List[str]):
             if excp.message in GBAN_ERRORS:
                 pass
             else:
-                message.reply_text("Could not gban due to: {}".format(excp.message))
+                message.reply_text(
+                    "Could not gban due to: {}".format(
+                        excp.message))
                 send_to_list(
-                    bot, SUDO_USERS, "Could not gban due to: {}".format(excp.message)
-                )
+                    bot,
+                    SUDO_USERS,
+                    "Could not gban due to: {}".format(
+                        excp.message))
                 sql.ungban_user(user_id)
                 return
         except TelegramError:
@@ -191,8 +195,10 @@ def gban(bot: Bot, update: Update, args: List[str]):
     if gbanned_chats:
         message.reply_text(
             "Done! {} has been globally banned in <code>{}</code> common chats.".format(
-                mention_html(user_chat.id, user_chat.first_name), gbanned_chats
-            ),
+                mention_html(
+                    user_chat.id,
+                    user_chat.first_name),
+                gbanned_chats),
             parse_mode=ParseMode.HTML,
         )
     else:
@@ -207,7 +213,7 @@ def gban(bot: Bot, update: Update, args: List[str]):
             "You've been globally banned from all groups where I am admin. If this is a mistake, you can appeal your ban @PhoenixSupport",
             parse_mode=ParseMode.HTML,
         )
-    except:
+    except BaseException:
         pass  # Bot either blocked or never started by user
 
 
@@ -265,7 +271,8 @@ def ungban(bot: Bot, update: Update, args: List[str]):
             if excp.message in UNGBAN_ERRORS:
                 pass
             else:
-                message.reply_text("Could not un-gban due to: {}".format(excp.message))
+                message.reply_text(
+                    "Could not un-gban due to: {}".format(excp.message))
                 bot.send_message(
                     OWNER_ID, "Could not un-gban due to: {}".format(excp.message)
                 )
@@ -359,8 +366,7 @@ def gbanstat(bot: Bot, update: Update, args: List[str]):
             update.effective_message.reply_text(
                 "I've disabled gbans in this group. GBans wont affect your users "
                 "anymore. You'll be less protected from any trolls and spammers "
-                "though!"
-            )
+                "though!")
     else:
         update.effective_message.reply_text(
             "Give me some arguments to choose a setting! on/off, yes/no!\n\n"
@@ -434,7 +440,8 @@ def __user_info__(user_id):
         text = text.format("Yes")
         user = sql.get_gbanned_user(user_id)
         if user.reason:
-            text += "\nReason: <code>{}</code>".format(html.escape(user.reason))
+            text += "\nReason: <code>{}</code>".format(
+                html.escape(user.reason))
     else:
         text = text.format("No")
     return text
@@ -445,7 +452,8 @@ def __migrate__(old_chat_id, new_chat_id):
 
 
 def __chat_settings__(chat_id, user_id):
-    return "This chat is enforcing *gbans*: `{}`.".format(sql.does_chat_gban(chat_id))
+    return "This chat is enforcing *gbans*: `{}`.".format(
+        sql.does_chat_gban(chat_id))
 
 
 __help__ = """

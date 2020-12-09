@@ -74,7 +74,8 @@ def filters(bot: Bot, update: Update):
     extracted = split_quotes(args[1])
     if len(extracted) < 1:
         return
-    # set trigger -> lower, so as to avoid adding duplicate filters with different cases
+    # set trigger -> lower, so as to avoid adding duplicate filters with
+    # different cases
     keyword = extracted[0].lower()
 
     is_sticker = False
@@ -109,7 +110,8 @@ def filters(bot: Bot, update: Update):
         is_document = True
 
     elif msg.reply_to_message and msg.reply_to_message.photo:
-        content = msg.reply_to_message.photo[-1].file_id  # last elem = best quality
+        # last elem = best quality
+        content = msg.reply_to_message.photo[-1].file_id
         is_image = True
 
     elif msg.reply_to_message and msg.reply_to_message.audio:
@@ -170,7 +172,8 @@ def stop_filter(bot: Bot, update: Update):
     for keyword in chat_filters:
         if keyword == args[1]:
             sql.remove_filter(chat.id, args[1])
-            update.effective_message.reply_text("Yep, I'll stop replying to that.")
+            update.effective_message.reply_text(
+                "Yep, I'll stop replying to that.")
             raise DispatcherHandlerStop
 
     update.effective_message.reply_text(
@@ -219,8 +222,7 @@ def reply_filter(bot: Bot, update: Update):
                     if excp.message == "Unsupported url protocol":
                         message.reply_text(
                             "You seem to be trying to use an unsupported url protocol. Telegram "
-                            "doesn't support buttons for some protocols, such as tg://. Please try again."
-                        )
+                            "doesn't support buttons for some protocols, such as tg://. Please try again.")
 
                     elif excp.message == "Reply message not found":
                         bot.send_message(
@@ -251,7 +253,8 @@ def reply_filter(bot: Bot, update: Update):
 
 
 def __stats__():
-    return "{} filters, across {} chats.".format(sql.num_filters(), sql.num_chats())
+    return "{} filters, across {} chats.".format(
+        sql.num_filters(), sql.num_chats())
 
 
 def __migrate__(old_chat_id, new_chat_id):
@@ -278,7 +281,8 @@ __mod_name__ = "Filters"
 
 FILTER_HANDLER = CommandHandler("filter", filters)
 STOP_HANDLER = CommandHandler("stop", stop_filter)
-LIST_HANDLER = DisableAbleCommandHandler("filters", list_handlers, admin_ok=True)
+LIST_HANDLER = DisableAbleCommandHandler(
+    "filters", list_handlers, admin_ok=True)
 CUST_FILTER_HANDLER = MessageHandler(CustomFilters.has_text, reply_filter)
 
 dispatcher.add_handler(FILTER_HANDLER)

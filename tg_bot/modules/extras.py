@@ -326,9 +326,7 @@ def wiki(bot: Bot, update: Update):
         res = wikipedia.summary(search)
     except DisambiguationError as e:
         update.message.reply_text(
-            "Disambiguated pages found! Adjust your query accordingly.\n<i>{}</i>".format(
-                e
-            ),
+            "Disambiguated pages found! Adjust your query accordingly.\n<i>{}</i>".format(e),
             parse_mode=ParseMode.HTML,
         )
     except PageError as e:
@@ -376,7 +374,8 @@ def weebify(bot: Bot, update: Update, args):
     elif msg.reply_to_message:
         string = msg.reply_to_message.text.lower()
     else:
-        msg.reply_text("Enter some text to weebify or reply to someone's message!")
+        msg.reply_text(
+            "Enter some text to weebify or reply to someone's message!")
         return
 
     for normiecharacter in string:

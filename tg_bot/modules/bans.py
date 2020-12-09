@@ -50,7 +50,8 @@ def ban(bot: Bot, update: Update, args: List[str]) -> str:
             raise
 
     if user_id == int(OWNER_ID):
-        message.reply_text("I'm not gonna ban my owner, want me to ban you instead?!")
+        message.reply_text(
+            "I'm not gonna ban my owner, want me to ban you instead?!")
         return ""
 
     elif user_id == bot.id:
@@ -200,7 +201,8 @@ def temp_ban(bot: Bot, update: Update, args: List[str]) -> str:
         return ""
 
     if not reason:
-        message.reply_text("You haven't specified a time to ban this user for!")
+        message.reply_text(
+            "You haven't specified a time to ban this user for!")
         return ""
 
     split_reason = reason.split(None, 1)
@@ -235,15 +237,16 @@ def temp_ban(bot: Bot, update: Update, args: List[str]) -> str:
     try:
         chat.kick_member(user_id, until_date=bantime)
         bot.send_sticker(chat.id, BAN_STICKER)  # BanHammer Sticker
-        message.reply_text("Banned! User will be banned for {}.".format(time_val))
+        message.reply_text(
+            "Banned! User will be banned for {}.".format(time_val))
         return log
 
     except BadRequest as excp:
         if excp.message == "Reply message not found":
             # Do not reply
             message.reply_text(
-                "Banned! User will be banned for {}.".format(time_val), quote=False
-            )
+                "Banned! User will be banned for {}.".format(time_val),
+                quote=False)
             return log
         else:
             LOGGER.warning(update)
@@ -324,10 +327,12 @@ def kick(bot: Bot, update: Update, args: List[str]) -> str:
 def kickme(bot: Bot, update: Update):
     user_id = update.effective_message.from_user.id
     if is_user_admin(update.effective_chat, user_id):
-        update.effective_message.reply_text("I wish I could... but you're an admin.")
+        update.effective_message.reply_text(
+            "I wish I could... but you're an admin.")
         return
 
-    res = update.effective_chat.unban_member(user_id)  # unban on current user = kick
+    res = update.effective_chat.unban_member(
+        user_id)  # unban on current user = kick
     if res:
         update.effective_message.reply_text("The door's that way ===>")
     else:
@@ -341,13 +346,14 @@ def banme(bot: Bot, update: Update):
     user_id = update.effective_message.from_user.id
     chat_id = update.effective_chat.id
     if is_user_admin(update.effective_chat, user_id):
-        update.effective_message.reply_text("I wish I could... but you're an admin.")
+        update.effective_message.reply_text(
+            "I wish I could... but you're an admin.")
         return
 
     try:
         bot.kick_chat_member(chat_id, user_id)
         res = "Get outta here!"
-    except:
+    except BaseException:
         res = "Huh... something went wrong. Report this @PhoenixSupport"
     update.effective_message.reply_text(res)
 
@@ -421,14 +427,28 @@ __help__ = """
 __mod_name__ = "Bans"
 
 BAN_HANDLER = CommandHandler("ban", ban, pass_args=True, filters=Filters.group)
-SBAN_HANDLER = CommandHandler("sban", sban, pass_args=True, filters=Filters.group)
+SBAN_HANDLER = CommandHandler(
+    "sban",
+    sban,
+    pass_args=True,
+    filters=Filters.group)
 TEMPBAN_HANDLER = CommandHandler(
     ["tban", "tempban"], temp_ban, pass_args=True, filters=Filters.group
 )
-KICK_HANDLER = CommandHandler("kick", kick, pass_args=True, filters=Filters.group)
-UNBAN_HANDLER = CommandHandler("unban", unban, pass_args=True, filters=Filters.group)
-KICKME_HANDLER = DisableAbleCommandHandler("kickme", kickme, filters=Filters.group)
-BANME_HANDLER = DisableAbleCommandHandler("banme", banme, filters=Filters.group)
+KICK_HANDLER = CommandHandler(
+    "kick",
+    kick,
+    pass_args=True,
+    filters=Filters.group)
+UNBAN_HANDLER = CommandHandler(
+    "unban",
+    unban,
+    pass_args=True,
+    filters=Filters.group)
+KICKME_HANDLER = DisableAbleCommandHandler(
+    "kickme", kickme, filters=Filters.group)
+BANME_HANDLER = DisableAbleCommandHandler(
+    "banme", banme, filters=Filters.group)
 
 dispatcher.add_handler(BAN_HANDLER)
 dispatcher.add_handler(SBAN_HANDLER)

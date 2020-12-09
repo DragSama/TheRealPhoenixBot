@@ -1,4 +1,5 @@
-# Module to blacklist users and prevent them from using commands by @TheRealPhoenix
+# Module to blacklist users and prevent them from using commands by
+# @TheRealPhoenix
 
 from telegram import Message, User, Bot, Update, ParseMode
 from telegram.ext import CommandHandler, run_async, Filters
@@ -17,7 +18,8 @@ def bl_user(bot: Bot, update: Update, args):
         user_id = args[0]
         reason = " ".join(args[1:])
     sql.blacklist_user(user_id, reason)
-    update.effective_message.reply_text("User has been blacklisted from using me!")
+    update.effective_message.reply_text(
+        "User has been blacklisted from using me!")
 
 
 @run_async
@@ -73,7 +75,8 @@ BL_HANDLER = CommandHandler(
 UNBL_HANDLER = CommandHandler(
     "unbluser", unbl_user, pass_args=True, filters=Filters.user(OWNER_ID)
 )
-BLUSERS_HANDLER = CommandHandler("blusers", bl_users, filters=Filters.user(OWNER_ID))
+BLUSERS_HANDLER = CommandHandler(
+    "blusers", bl_users, filters=Filters.user(OWNER_ID))
 
 dispatcher.add_handler(BL_HANDLER)
 dispatcher.add_handler(UNBL_HANDLER)

@@ -78,7 +78,8 @@ def warn(
         for warn_reason in reasons:
             reply += "\n - {}".format(html.escape(warn_reason))
 
-        message.bot.send_sticker(chat.id, BAN_STICKER)  # banhammer marie sticker
+        message.bot.send_sticker(
+            chat.id, BAN_STICKER)  # banhammer marie sticker
         keyboard = []
         log_reason = (
             "<b>{}:</b>"
@@ -98,15 +99,8 @@ def warn(
         )
 
     else:
-        keyboard = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "Remove warn", callback_data="rm_warn({})".format(user.id)
-                    )
-                ]
-            ]
-        )
+        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton(
+            "Remove warn", callback_data="rm_warn({})".format(user.id))]])
 
         reply = "{} has {}/{} warnings... watch out!".format(
             mention_html(user.id, user.first_name), num_warns, limit
@@ -134,13 +128,18 @@ def warn(
         )
 
     try:
-        message.reply_text(reply, reply_markup=keyboard, parse_mode=ParseMode.HTML)
+        message.reply_text(
+            reply,
+            reply_markup=keyboard,
+            parse_mode=ParseMode.HTML)
     except BadRequest as excp:
         if excp.message == "Reply message not found":
             # Do not reply
             message.reply_text(
-                reply, reply_markup=keyboard, parse_mode=ParseMode.HTML, quote=False
-            )
+                reply,
+                reply_markup=keyboard,
+                parse_mode=ParseMode.HTML,
+                quote=False)
         else:
             raise
     return log_reason
@@ -160,7 +159,10 @@ def button(bot: Bot, update: Update) -> str:
         res = sql.remove_warn(user_id, chat.id)
         if res:
             update.effective_message.edit_text(
-                "Warn removed by {}.".format(mention_html(user.id, user.first_name)),
+                "Warn removed by {}.".format(
+                    mention_html(
+                        user.id,
+                        user.first_name)),
                 parse_mode=ParseMode.HTML,
             )
             user_member = chat.get_member(user_id)
@@ -210,7 +212,8 @@ def warn_user(bot: Bot, update: Update, args: List[str]) -> str:
                 warner,
             )
         else:
-            return warn(chat.get_member(user_id).user, chat, reason, message, warner)
+            return warn(chat.get_member(user_id).user,
+                        chat, reason, message, warner)
     else:
         message.reply_text("No user was designated!")
     return ""
@@ -292,8 +295,7 @@ def warns(bot: Bot, update: Update, args: List[str]):
 
         if reasons:
             text = "This user has {}/{} warnings, for the following reasons:".format(
-                num_warns, limit
-            )
+                num_warns, limit)
             for reason in reasons:
                 text += "\n - {}".format(reason)
 
@@ -307,7 +309,8 @@ def warns(bot: Bot, update: Update, args: List[str]):
                 )
             )
     else:
-        update.effective_message.reply_text("This user hasn't got any warnings!")
+        update.effective_message.reply_text(
+            "This user hasn't got any warnings!")
 
 
 # Dispatcher handler stop - do not async
@@ -326,7 +329,8 @@ def add_warn_filter(bot: Bot, update: Update):
     extracted = split_quotes(args[1])
 
     if len(extracted) >= 2:
-        # set trigger -> lower, so as to avoid adding duplicate filters with different cases
+        # set trigger -> lower, so as to avoid adding duplicate filters with
+        # different cases
         keyword = extracted[0].lower()
         content = extracted[1]
 
@@ -340,7 +344,8 @@ def add_warn_filter(bot: Bot, update: Update):
 
     sql.add_warn_filter(chat.id, keyword, content)
 
-    update.effective_message.reply_text("Warn handler added for '{}'!".format(keyword))
+    update.effective_message.reply_text(
+        "Warn handler added for '{}'!".format(keyword))
     raise DispatcherHandlerStop
 
 
@@ -386,20 +391,23 @@ def list_warn_filters(bot: Bot, update: Update):
     all_handlers = sql.get_chat_warn_triggers(chat.id)
 
     if not all_handlers:
-        update.effective_message.reply_text("No warning filters are active here!")
+        update.effective_message.reply_text(
+            "No warning filters are active here!")
         return
 
     filter_list = CURRENT_WARNING_FILTER_STRING
     for keyword in all_handlers:
         entry = " - {}\n".format(html.escape(keyword))
         if len(entry) + len(filter_list) > telegram.MAX_MESSAGE_LENGTH:
-            update.effective_message.reply_text(filter_list, parse_mode=ParseMode.HTML)
+            update.effective_message.reply_text(
+                filter_list, parse_mode=ParseMode.HTML)
             filter_list = entry
         else:
             filter_list += entry
 
     if not filter_list == CURRENT_WARNING_FILTER_STRING:
-        update.effective_message.reply_text(filter_list, parse_mode=ParseMode.HTML)
+        update.effective_message.reply_text(
+            filter_list, parse_mode=ParseMode.HTML)
 
 
 @run_async
@@ -471,9 +479,9 @@ def set_warn_strength(bot: Bot, update: Update, args: List[str]):
                 "<b>{}:</b>\n"
                 "<b>Admin:</b> {}\n"
                 "Has enabled strong warns. Users will be banned.".format(
-                    html.escape(chat.title), mention_html(user.id, user.first_name)
-                )
-            )
+                    html.escape(
+                        chat.title), mention_html(
+                        user.id, user.first_name)))
 
         elif args[0].lower() in ("off", "no"):
             sql.set_warn_strength(chat.id, True)
@@ -484,9 +492,9 @@ def set_warn_strength(bot: Bot, update: Update, args: List[str]):
                 "<b>{}:</b>\n"
                 "<b>Admin:</b> {}\n"
                 "Has disabled strong warns. Users will only be kicked.".format(
-                    html.escape(chat.title), mention_html(user.id, user.first_name)
-                )
-            )
+                    html.escape(
+                        chat.title), mention_html(
+                        user.id, user.first_name)))
 
         else:
             msg.reply_text("I only understand on/yes/no/off!")
@@ -548,7 +556,7 @@ __help__ = """
  - /rmwarn <userhandle>: same as /unwarn.
  - /resetwarn <userhandle>: reset the warnings for a user. Can also be used as a reply.
  - /addwarn <keyword> <reply message>: set a warning filter on a certain keyword. If you want your keyword to \
-be a sentence, encompass it with quotes, as such: `/addwarn "very angry" This is an angry user`. 
+be a sentence, encompass it with quotes, as such: `/addwarn "very angry" This is an angry user`.
  - /nowarn <keyword>: stop a warning filter
  - /warnlimit <num>: set the warning limit
  - /strongwarn <on/yes/off/no>: If set to on, exceeding the warn limit will result in a ban. Else, will just kick.
@@ -556,7 +564,11 @@ be a sentence, encompass it with quotes, as such: `/addwarn "very angry" This is
 
 __mod_name__ = "Warnings"
 
-WARN_HANDLER = CommandHandler("warn", warn_user, pass_args=True, filters=Filters.group)
+WARN_HANDLER = CommandHandler(
+    "warn",
+    warn_user,
+    pass_args=True,
+    filters=Filters.group)
 UNWARN_HANDLER = CommandHandler(
     ["unwarn", "rmwarn"], remove_warn, pass_args=True, filters=Filters.group
 )
@@ -567,7 +579,10 @@ CALLBACK_QUERY_HANDLER = CallbackQueryHandler(button, pattern=r"rm_warn")
 MYWARNS_HANDLER = DisableAbleCommandHandler(
     "warns", warns, pass_args=True, filters=Filters.group
 )
-ADD_WARN_HANDLER = CommandHandler("addwarn", add_warn_filter, filters=Filters.group)
+ADD_WARN_HANDLER = CommandHandler(
+    "addwarn",
+    add_warn_filter,
+    filters=Filters.group)
 RM_WARN_HANDLER = CommandHandler(
     ["nowarn", "stopwarn"], remove_warn_filter, filters=Filters.group
 )

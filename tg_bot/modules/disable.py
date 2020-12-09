@@ -50,7 +50,8 @@ if is_module_loaded(FILENAME):
 
                 # disabled, admincmd, user admin
                 if sql.is_command_disabled(chat.id, command):
-                    return command in ADMIN_CMDS and is_user_admin(chat, user.id)
+                    return command in ADMIN_CMDS and is_user_admin(
+                        chat, user.id)
 
                 # not disabled
                 else:
@@ -68,9 +69,8 @@ if is_module_loaded(FILENAME):
             chat = update.effective_chat
             if update.effective_user:
                 if not bsql.is_user_blacklisted(update.effective_user.id):
-                    return super().check_update(update) and not sql.is_command_disabled(
-                        chat.id, self.friendly
-                    )
+                    return super().check_update(
+                        update) and not sql.is_command_disabled(chat.id, self.friendly)
 
     @run_async
     @user_admin
@@ -88,7 +88,8 @@ if is_module_loaded(FILENAME):
                     parse_mode=ParseMode.MARKDOWN,
                 )
             else:
-                update.effective_message.reply_text("That command can't be disabled")
+                update.effective_message.reply_text(
+                    "That command can't be disabled")
 
         else:
             update.effective_message.reply_text("What should I disable?")
@@ -136,7 +137,8 @@ if is_module_loaded(FILENAME):
         result = ""
         for cmd in disabled:
             result += " - `{}`\n".format(escape_markdown(cmd))
-        return "The following commands are currently restricted:\n{}".format(result)
+        return "The following commands are currently restricted:\n{}".format(
+            result)
 
     @run_async
     def commands(bot: Bot, update: Update):
@@ -176,7 +178,8 @@ if is_module_loaded(FILENAME):
     COMMANDS_HANDLER = CommandHandler(
         ["cmds", "disabled"], commands, filters=Filters.group
     )
-    TOGGLE_HANDLER = CommandHandler("listcmds", list_cmds, filters=Filters.group)
+    TOGGLE_HANDLER = CommandHandler(
+        "listcmds", list_cmds, filters=Filters.group)
 
     dispatcher.add_handler(DISABLE_HANDLER)
     dispatcher.add_handler(ENABLE_HANDLER)

@@ -10,7 +10,7 @@ BL_CHATS_GROUP = -1
 
 def blacklist_chats(bot: Bot, update: Update):
     chat = update.effective_chat
-    if not chat.id in BL_CHATS:
+    if chat.id not in BL_CHATS:
         return
     try:
         chat.send_message(
@@ -19,7 +19,8 @@ def blacklist_chats(bot: Bot, update: Update):
         chat.leave()
         raise DispatcherHandlerStop
     except TelegramError as e:
-        LOGGER.error(f"Couldn't leave blacklisted chat: {chat.id} due to:\n{e}")
+        LOGGER.error(
+            f"Couldn't leave blacklisted chat: {chat.id} due to:\n{e}")
 
 
 BLACKLIST_CHATS_HANDLER = MessageHandler(Filters.group, blacklist_chats)

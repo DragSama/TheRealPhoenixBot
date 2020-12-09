@@ -16,7 +16,11 @@ def translate(bot: Bot, update: Update):
     if update.effective_message.reply_to_message:
         msg = update.effective_message.reply_to_message
 
-        params = dict(lang="US", clientVersion="2.0", apiKey=API_KEY, text=msg.text)
+        params = dict(
+            lang="US",
+            clientVersion="2.0",
+            apiKey=API_KEY,
+            text=msg.text)
 
         res = requests.get(URL, params=params)
         # print(res)
@@ -32,7 +36,8 @@ def translate(bot: Bot, update: Update):
             end = change.get("To") + 1
             suggestions = change.get("Suggestions")
             if suggestions:
-                sugg_str = suggestions[0].get("Text")  # should look at this list more
+                # should look at this list more
+                sugg_str = suggestions[0].get("Text")
                 curr_string += msg.text[prev_end:start] + sugg_str
 
                 prev_end = end
